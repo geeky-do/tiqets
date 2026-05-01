@@ -47,7 +47,7 @@ def get_top_five_customers(df: pd.DataFrame) -> dict:
     counts = exploded.groupby("customer_id")["barcodes"].count()
     top5 = counts.sort_values(ascending=False).head(5)
 
-    return top5
+    return top5.to_dict()
 
 
 
