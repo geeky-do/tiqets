@@ -72,14 +72,13 @@ def test_top_five_customers(capsys):
             ["b12"]            # F -> 1
         ]
     })
-    top_five = get_top_five_customers(df)
-    expected = {
-        "B, 4",
-        "A, 3",
-        "C, 2",
-        "D, 1",
-        "E, 1"
-    }
-    print (top_five)
+    result = get_top_five_customers(df)
+    expected = [
+        ("B", 4),
+        ("A", 3),
+        ("C", 2),
+        ("D", 1),
+        ("E", 1),
+    ]
 
-    assert top_five == expected
+    assert result == expected

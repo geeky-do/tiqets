@@ -42,12 +42,12 @@ def validate(orders: pd.DataFrame, barcodes: pd.DataFrame) -> Tuple[pd.DataFrame
     return valid_orders, barcodes, invalid_orders, dup_barcodes, 
 
 
-def get_top_five_customers(df: pd.DataFrame) -> dict:
+def get_top_five_customers(df: pd.DataFrame) -> list[tuple[str, int]]:
     exploded = df.explode("barcodes")
     counts = exploded.groupby("customer_id")["barcodes"].count()
     top5 = counts.sort_values(ascending=False).head(5)
 
-    return top5.to_dict()
+    return list(top5.items())
 
 
 
@@ -84,7 +84,7 @@ def main():
     print ("****************************")
 
     print ("Top five Customers:")
-    for cid, count in top_five.items():
+    for cid, count in top_five:
         print(f"{cid}, {count}")
     print ("****************************")
 
