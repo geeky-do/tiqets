@@ -25,20 +25,21 @@ def load_data(orders_path: str, barcodes_path: str) -> Tuple[pd.DataFrame, pd.Da
 
 def validate(orders: pd.DataFrame, barcodes: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     # Remove duplicate barcodes
-    invalid_barcodes = barcodes[barcodes.duplicated(subset=["barcode"], keep=False)]
+    dup_barcodes = barcodes[barcodes.duplicated(subset=["barcode"], keep=False)]
+    if not dup_barcodes.empty:
+        barcodes = barcodes.drop_duplicates(subset=["barcode"], keep="first")
 
-    barcodes = barcodes.drop_duplicates(subset=["barcode"], keep="first")
-
-    # Remove rows with empty order_id (unused barcodes handled separately)
-    valid_barcodes = barcodes.dropna(subset=["order_id"])
+    # Keep all barcodes (including unused) for later counting
+    # Identify used barcodes
+    used = barcodes.dropna(subset=["order_id"])
 
     # Orders without barcodes
-    orders_with_barcodes = valid_barcodes["order_id"].unique()
+    orders_with_barcodes = used["order_id"].unique()
     invalid_orders = orders[~orders["order_id"].isin(orders_with_barcodes)]
 
     valid_orders = orders[orders["order_id"].isin(orders_with_barcodes)]
 
-    return valid_orders, valid_barcodes, invalid_orders, invalid_barcodes
+    return valid_orders, barcodes, invalid_orders, dup_barcodes, 
 
 
 def get_top_five_customers(df: pd.DataFrame) -> dict:
@@ -86,6 +87,9 @@ def main():
     for cid, count in top_five.items():
         print(f"{cid}, {count}")
     print ("****************************")
+
+    print(f"Unused barcodes: {count_unused(valid_barcodes)}")
+
 
 if __name__ == "__main__":
     main()
