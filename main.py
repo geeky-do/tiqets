@@ -25,11 +25,9 @@ def load_data(orders_path: str, barcodes_path: str) -> Tuple[pd.DataFrame, pd.Da
 
 def validate(orders: pd.DataFrame, barcodes: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     # Remove duplicate barcodes
-    dup_barcodes = barcodes[barcodes.duplicated(subset=["barcode"], keep=False)]
-    if not dup_barcodes.empty:
-        for b in dup_barcodes["barcode"].unique():
-            log_err(f"Duplicate barcode ignored: {b}")
-        barcodes = barcodes.drop_duplicates(subset=["barcode"], keep="first")
+    invalid_barcodes = barcodes[barcodes.duplicated(subset=["barcode"], keep=False)]
+
+    barcodes = barcodes.drop_duplicates(subset=["barcode"], keep="first")
 
     # Remove rows with empty order_id (unused barcodes handled separately)
     valid_barcodes = barcodes.dropna(subset=["order_id"])
@@ -37,19 +35,23 @@ def validate(orders: pd.DataFrame, barcodes: pd.DataFrame) -> Tuple[pd.DataFrame
     # Orders without barcodes
     orders_with_barcodes = valid_barcodes["order_id"].unique()
     invalid_orders = orders[~orders["order_id"].isin(orders_with_barcodes)]
-    if not invalid_orders.empty:
-        for oid in invalid_orders["order_id"]:
-            log_err(f"Order without barcodes ignored: {oid}")
+
     valid_orders = orders[orders["order_id"].isin(orders_with_barcodes)]
 
-    return valid_orders, barcodes
+    return valid_orders, valid_barcodes, invalid_orders, invalid_barcodes
+
+
+def get_top_five_customers(df: pd.DataFrame) -> dict:
+    exploded = df.explode("barcodes")
+    counts = exploded.groupby("customer_id")["barcodes"].count()
+    top5 = counts.sort_values(ascending=False).head(5)
+
+    return top5
 
 
 
-def save_output(df: pd.DataFrame, path: str):
-    out = df.copy()
-    out["barcodes"] = out["barcodes"].apply(json.dumps)
-    out.to_csv(path, index=False)
+def count_unused(barcodes: pd.DataFrame) -> int:
+    return barcodes[barcodes["order_id"].isna()].shape[0]
 
 
 def main():
@@ -60,11 +62,30 @@ def main():
     args = parser.parse_args()
 
     orders, barcodes = load_data(args.orders, args.barcodes)
-    valid_orders, valid_barcodes = validate(orders, barcodes)
+    print ("****************************")
+    print("Processing Data!!")
+
+    valid_orders, valid_barcodes, invalid_orders, invalid_barcodes = validate(orders, barcodes)
+
+    # log invalid barcodes
+    if not invalid_barcodes.empty:
+        for b in invalid_barcodes["barcode"].unique():
+            log_err(f"Duplicate barcode ignored: {b}")
+    # log invalid orders
+    if not invalid_orders.empty:
+        for oid in invalid_orders["order_id"]:
+            log_err(f"Order without barcodes ignored: {oid}")
 
     output_df = build_output(valid_orders, valid_barcodes)
-    save_output(output_df, args.output)
+    output_df.to_csv(args.output, index=False)
+    top_five = get_top_five_customers(output_df)
 
+    print ("****************************")
+
+    print ("Top five Customers:")
+    for cid, count in top_five.items():
+        print(f"{cid}, {count}")
+    print ("****************************")
 
 if __name__ == "__main__":
     main()
