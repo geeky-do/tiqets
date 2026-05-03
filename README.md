@@ -7,7 +7,8 @@ The project delivers the requirements provided in 'Tiqets Programming Assignment
         - Two CSVs (orders, barcodes) with the following columns:
         - order_id,customer_id
         - barcode,order_id
-        -Output path for the exported output
+        - The provided path can be relative or the full path
+        - Output path for the exported output
     - Expected Output:
         - Exported CSV with all the barcodes and orders_ids per
 customer
