@@ -14,7 +14,10 @@ customer
         - Prints out the Top five customers with the most tickets
         - Prints out the amount of unusued barcodes
         - Logs any duplicate barcodes or invalid orders
-    - Performs processing of the files, validation, analysis and outputs the results in a CSV
+    - Responsible for:
+        - Processing and validation of Input files
+        - Analysis of the data using pandas
+        - Outputs the results in a CSV in addition to other metrics in terminal
 - data directory
     - Contains our dataset for barcodes, orders (including invalid ones for testing)
 - tests directory
