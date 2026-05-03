@@ -11,7 +11,7 @@ The project delivers the requirements provided in 'Tiqets Programming Assignment
     - Expected Output:
         - Exported CSV with all the barcodes and orders_ids per
 customer
-        - Prints out the Top five customers with the most tickets
+        - Prints out the top five customers with the most tickets
         - Prints out the amount of unusued barcodes
         - Logs any duplicate barcodes or invalid orders
     - Responsible for:
