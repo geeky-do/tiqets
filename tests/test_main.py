@@ -1,6 +1,7 @@
-from main import load_data, build_output, validate, count_unused, get_top_five_customers
+from main import load_data, build_output, validate, count_unused, get_top_five_customers, main
 import pandas as pd
-
+import sys
+import pytest
 
 def test_build_output_basic(tmp_path):
     orders_csv = tmp_path / "orders.csv"
@@ -82,3 +83,29 @@ def test_top_five_customers(capsys):
     ]
 
     assert result == expected
+
+
+def test_main_invalid_orders_columns(tmp_path, capsys, monkeypatch):
+    # Missing customer_id column
+    orders_csv = tmp_path / "orders.csv"
+    barcodes_csv = tmp_path / "barcodes.csv"
+
+    orders_csv.write_text("order_id\n1\n2\n")
+    barcodes_csv.write_text("barcode,order_id\nb1,1\n")
+
+    # Simulate CLI args
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["script.py", str(orders_csv), str(barcodes_csv)]
+    )
+
+    with pytest.raises(SystemExit) as e:
+        main()
+
+    # Assert exit code
+    assert e.value.code == 1
+
+    # Assert error message
+    captured = capsys.readouterr()
+    assert "orders.csv is missing required columns" in captured.err
