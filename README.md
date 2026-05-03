@@ -5,8 +5,8 @@ The project delivers the requirements provided in 'Tiqets Programming Assignment
 - main.py: is the entry point to the application
     - Arguments:
         - Two CSVs (orders, barcodes) with the following columns:
-        - order_id,customer_id
-        - barcode,order_id
+            - order_id,customer_id
+            - barcode,order_id
         - The provided path can be relative or the full path
         - Output path for the exported output
     - Expected Output:
