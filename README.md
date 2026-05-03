@@ -3,17 +3,43 @@
 
 Based on the requirements outlined in 'Tiqets Programming Assignment - CSV files.pdf ' the following solution was created:
 
-- main.py --> is the entry point to the application
-    - TBA
+- main.py: is the entry point to the application
+    - Requires two CSVs (orders, barcodes) with the following columns:
+        - order_id,customer_id
+        - barcode,order_id
+    - Requires an output path for the exported output
+    - Performs processing of the files, validation, analysis and output
+    - 
 - data directory
-    - Contains our dataset for barcodes, orders
+    - Contains our dataset for barcodes, orders (including invalid ones for testing)
+- tests directory
+    - Includes unit tests for various use cases including:
+        - Validation on CSV columns
+        - Basic output creation
+        - Duplicate barcodes
+        - Invalid Orders (orders withotu barcode)
+        - Top five customers
+        - Count of unused barcodes
+
 
 ## Prerequisites
 - Python 3.14
-## Dependencies
-Install dependencies via the command
 
-``` ```
+## Dependencies
+
+### Create virtual environment 
+```python -m venv new_venv```
+
+### Activate virtual environment 
+
+Windows:
+```new_venv/Scripts/activate```
+
+Mac: 
+```new_venv/bin/activate```
+
+### Install dependencies
+```pip install -r requirements.txt```
 
 ## Unit testing
 Run the tests via the command
@@ -22,6 +48,7 @@ Run the tests via the command
 
 ## Run the Code
 Run the application via the command
+
 ```python main.py data/orders.csv data/barcodes.csv -o export/export.csv ``` 
 
 ## UML 
