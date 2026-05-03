@@ -2,7 +2,6 @@ import argparse
 import pandas as pd
 from typing import Tuple
 import sys
-import json
 
 def log_err(msg: str):
     print(msg, file=sys.stderr)
