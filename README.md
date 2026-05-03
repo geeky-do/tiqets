@@ -1,15 +1,20 @@
 # Tiqets 
 ## Solution outline
-
-Based on the requirements outlined in 'Tiqets Programming Assignment - CSV files.pdf ' the following solution was created:
+The project delivers the requirements provided in 'Tiqets Programming Assignment - CSV files.pdf '. 
 
 - main.py: is the entry point to the application
-    - Requires two CSVs (orders, barcodes) with the following columns:
+    - Arguments:
+        - Two CSVs (orders, barcodes) with the following columns:
         - order_id,customer_id
         - barcode,order_id
-    - Requires an output path for the exported output
-    - Performs processing of the files, validation, analysis and output
-    - 
+        -Output path for the exported output
+    - Expected Output:
+        - Exported CSV with all the barcodes and orders_ids per
+customer
+        - Prints out the Top five customers with the most tickets
+        - Prints out the amount of unusued barcodes
+        - Logs any duplicate barcodes or invalid orders
+    - Performs processing of the files, validation, analysis and outputs the results in a CSV
 - data directory
     - Contains our dataset for barcodes, orders (including invalid ones for testing)
 - tests directory
@@ -17,7 +22,7 @@ Based on the requirements outlined in 'Tiqets Programming Assignment - CSV files
         - Validation on CSV columns
         - Basic output creation
         - Duplicate barcodes
-        - Invalid Orders (orders withotu barcode)
+        - Invalid Orders (orders without barcode)
         - Top five customers
         - Count of unused barcodes
 
@@ -28,15 +33,15 @@ Based on the requirements outlined in 'Tiqets Programming Assignment - CSV files
 ## Dependencies
 
 ### Create virtual environment 
-```python -m venv new_venv```
+```python -m venv .new_venv```
 
 ### Activate virtual environment 
 
 Windows:
-```new_venv/Scripts/activate```
+```.new_venv/Scripts/activate```
 
 Mac: 
-```new_venv/bin/activate```
+```.new_venv/bin/activate```
 
 ### Install dependencies
 ```pip install -r requirements.txt```
